@@ -1,0 +1,16 @@
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+.vscode/
+*.dll
+*.exe
+# Rider and other IDE files
+*.userprefs
+*.sln.DotSettings
+# dotnet
+*.dbmdl
+*.pdb
+.dotnet/
+.idea/
