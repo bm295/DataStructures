@@ -1,18 +1,26 @@
 # DataStructures
 
-Refactor theo **Hexagonal Architecture (Ports & Adapters)** để tái hiện bug `Đặt hàng = -1` và minh hoạ hướng fix.
+Ứng dụng mẫu quản lý FnB cho **The Hudson Rooms – Capella Hanoi** theo kiến trúc **Hexagonal Architecture (Ports & Adapters)**.
+
+## Mục tiêu
+
+- Quản lý quy mô chỗ ngồi của nhà hàng trong khoảng **40–60 chỗ**.
+- Mô phỏng vận hành ca dịch vụ:
+  - Mở bàn theo số khách.
+  - Gọi món theo menu.
+  - Chốt bill và tổng kết doanh thu.
 
 ## Kiến trúc
 
-- `src/Domain`: Entity/Value Object + Port interface.
-- `src/Application`: Use case tái hiện bug và luồng fix.
-- `src/Infrastructure`: Adapter lưu trữ in-memory cho reservation.
-- `src/Adapters/Console`: Presenter in kết quả ra console.
+- `src/Domain`: model nghiệp vụ + port (`IFnbManagementRepository`).
+- `src/Application`: use case `RunHudsonRoomsFnbUseCase`.
+- `src/Infrastructure`: adapter lưu trữ in-memory cho bàn, menu, order.
+- `src/Adapters/Console`: presenter in báo cáo vận hành ra console.
 
 ## Runtime
 
 - .NET: `net10.0`
-- C#: `LangVersion=preview` (cho C# 14 theo SDK .NET 10 preview)
+- C#: `LangVersion=preview`
 
 ## Chạy thử
 
@@ -20,7 +28,8 @@ Refactor theo **Hexagonal Architecture (Ports & Adapters)** để tái hiện bu
 dotnet run
 ```
 
-Kỳ vọng:
+Kết quả kỳ vọng:
 
-- Luồng buggy: `SP000003` và `SP000004` có thể xuống `-1`.
-- Luồng fixed: reservation được release đúng và clamp về `0` nếu âm.
+- Ứng dụng xác nhận tổng số ghế đang cấu hình nằm trong dải **40–60**.
+- In chi tiết bill của các bàn đã phục vụ.
+- In tổng kết cuối ca: số order đã đóng, số khách phục vụ, doanh thu.
