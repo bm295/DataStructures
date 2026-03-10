@@ -8,18 +8,22 @@
 
 ## Scope implemented in this repository
 
-1. Quản lý cấu hình nhà hàng theo profile có dải sức chứa (`MinSeats`, `MaxSeats`).
-2. Quản lý danh sách bàn và số ghế từng bàn.
-3. Quản lý menu cơ bản (mã món, tên món, đơn giá).
-4. Luồng vận hành phục vụ:
-   - Mở bàn theo số khách.
-   - Thêm món vào order của bàn.
-   - Chốt bàn để tạo bill chi tiết.
-5. Báo cáo cuối ca:
+1. Quản lý profile nhà hàng và cấu hình bàn trong dải 40–60 ghế.
+2. Quản lý menu và inventory theo SKU.
+3. Quản lý order theo vòng đời:
+   - Create order cho bàn.
+   - Add / remove items.
+   - Send to kitchen.
+   - Process payment.
+   - Deduct inventory.
+   - Close order.
+4. Báo cáo cuối ca:
    - Tổng số khách đã phục vụ.
    - Số order đã đóng.
    - Tổng doanh thu.
 
-## Constraint
+## Constraints
 
 - Tổng số ghế cấu hình phải nằm trong dải **40–60**; nếu vượt phạm vi sẽ báo lỗi nghiệp vụ.
+- Không thể thanh toán khi order chưa gửi bếp.
+- Không thể đóng order khi chưa thanh toán.

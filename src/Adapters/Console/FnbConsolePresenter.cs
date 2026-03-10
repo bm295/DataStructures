@@ -14,12 +14,13 @@ public sealed class FnbConsolePresenter
 
         foreach (var bill in summary.Bills)
         {
-            Console.WriteLine($"Table {bill.TableId} ({bill.Guests} guests)");
+            Console.WriteLine($"Order {bill.OrderId} - Table {bill.TableId} ({bill.Guests} guests)");
             foreach (var line in bill.Lines)
             {
                 Console.WriteLine($"  - {line.ItemName} x{line.Quantity} @ {line.UnitPrice:N0} = {line.LineTotal:N0}");
             }
 
+            Console.WriteLine($"  Payment: {bill.PaymentMethod} / Ref: {bill.PaymentReference}");
             Console.WriteLine($"  Total: {bill.Total:N0}");
             Console.WriteLine();
         }
