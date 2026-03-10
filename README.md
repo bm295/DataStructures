@@ -5,31 +5,40 @@
 ## Mục tiêu
 
 - Quản lý quy mô chỗ ngồi của nhà hàng trong khoảng **40–60 chỗ**.
-- Mô phỏng vận hành ca dịch vụ:
-  - Mở bàn theo số khách.
-  - Gọi món theo menu.
-  - Chốt bill và tổng kết doanh thu.
+- Mô phỏng luồng vận hành thực tế:
+  1. Create order for table
+  2. Add / remove items
+  3. Send order to kitchen
+  4. Process payment
+  5. Deduct inventory
+  6. Close order
 
 ## Kiến trúc
 
-- `src/Domain`: model nghiệp vụ + port (`IFnbManagementRepository`).
-- `src/Application`: use case `RunHudsonRoomsFnbUseCase`.
-- `src/Infrastructure`: adapter lưu trữ in-memory cho bàn, menu, order.
-- `src/Adapters/Console`: presenter in báo cáo vận hành ra console.
+- `src/Domain`
+  - Entities/value objects: `Order`, `MenuItem`, `DiningTable`, `InventoryItem`.
+  - Business rules: trạng thái order (`Draft -> SentToKitchen -> Paid -> Closed`), add/remove món, validate flow.
+- `src/Application`
+  - Use case: `RunHudsonRoomsFnbUseCase`.
+  - Command models cho từng thao tác nghiệp vụ.
+  - Ports: `IFnbReadPort`, `IOrderPort`, `IInventoryPort`, `IPaymentPort`.
+- `src/Infrastructure`
+  - In-memory adapters cho đọc dữ liệu, order persistence, inventory, payment gateway.
+- `src/Adapters/Console`
+  - Presenter hiển thị bill và báo cáo cuối ca.
 
 ## Runtime
 
 - .NET: `net10.0`
-- C#: `LangVersion=preview`
+- C#: `LangVersion=preview` (tương thích cú pháp hiện đại)
+
+## DI và async
+
+- Sử dụng `Microsoft.Extensions.DependencyInjection` tại `Program.cs`.
+- Các port và use case dùng `Task` để hỗ trợ async workflow.
 
 ## Chạy thử
 
 ```bash
 dotnet run
 ```
-
-Kết quả kỳ vọng:
-
-- Ứng dụng xác nhận tổng số ghế đang cấu hình nằm trong dải **40–60**.
-- In chi tiết bill của các bàn đã phục vụ.
-- In tổng kết cuối ca: số order đã đóng, số khách phục vụ, doanh thu.
