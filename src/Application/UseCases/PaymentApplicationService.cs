@@ -9,7 +9,7 @@ public sealed class PaymentApplicationService(
   IFnbReadPort readPort,
   IOrderPort orderPort,
   IPaymentAggregatePort paymentAggregatePort,
-  IPaymentGatewayPort paymentGatewayPort)
+  IPaymentGatewayPort paymentGatewayPort) : IPaymentOperations
 {
   public async Task<PaymentResult> ChargeOrderAsync(Order order, PaymentMethod method, Guid paymentAttemptId, CancellationToken cancellationToken = default)
   {
