@@ -28,6 +28,7 @@ public static class ApplicationModuleServiceCollectionExtensions
   public static IServiceCollection AddPaymentModule(this IServiceCollection services)
   {
     services.AddSingleton<PaymentApplicationService>();
+    services.AddSingleton<IPaymentOperations>(provider => provider.GetRequiredService<PaymentApplicationService>());
 
     return services;
   }

@@ -120,6 +120,20 @@ public sealed class ModuleBoundaryTests
   }
 
   [Fact]
+  public void CheckoutWorkflow_ShouldUsePaymentOperationsContract()
+  {
+    var constructorParameterTypes = typeof(CheckoutOrderWorkflow)
+      .GetConstructors()
+      .Single()
+      .GetParameters()
+      .Select(parameter => parameter.ParameterType)
+      .ToArray();
+
+    Assert.Contains(typeof(IPaymentOperations), constructorParameterTypes);
+    Assert.DoesNotContain(typeof(PaymentApplicationService), constructorParameterTypes);
+  }
+
+  [Fact]
   public void Workflows_ShouldNotDependOnInfrastructureAdapters()
   {
     var result = Types.InAssembly(typeof(CheckoutOrderWorkflow).Assembly)
