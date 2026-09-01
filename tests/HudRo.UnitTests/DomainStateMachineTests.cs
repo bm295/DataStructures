@@ -127,7 +127,7 @@ public sealed class DomainStateMachineTests
     order.AddItem(OrderItem.Create("M1", 1));
 
     var preparingBeforeSend = Assert.Throws<InvalidOperationException>(() => order.MarkPreparing());
-    Assert.Contains("SentToKitchen only from Draft", preparingBeforeSend.Message);
+    Assert.Contains("Preparing only from SentToKitchen", preparingBeforeSend.Message);
 
     order.SendToKitchen();
     order.MarkPreparing();
@@ -164,14 +164,17 @@ public sealed class DomainStateMachineTests
     var account = new LoyaltyAccount(Guid.NewGuid(), Guid.NewGuid(), 0, LoyaltyTier.Bronze);
     var accrueTx = Guid.NewGuid();
     var redeemTx = Guid.NewGuid();
+    var policy = new LoyaltyPointPolicy(10_000, 1, null, LoyaltyTierPolicy.Default());
 
-    account.Accrue(accrueTx, Guid.NewGuid(), 25_000m, DateTimeOffset.UtcNow);
+    account.AccruePoints(accrueTx, Guid.NewGuid(), 25_000m, DateTimeOffset.UtcNow, policy);
     Assert.Equal(2, account.PointsBalance);
 
-    account.Redeem(redeemTx, 1, DateTimeOffset.UtcNow);
+    account.RedeemPoints(redeemTx, 1, DateTimeOffset.UtcNow, policy);
     Assert.Equal(1, account.PointsBalance);
 
-    account.Reverse(Guid.NewGuid(), redeemTx, DateTimeOffset.UtcNow);
-    Assert.Equal(2, account.PointsBalance);
+    var secondAccrual = Guid.NewGuid();
+    account.AccruePoints(secondAccrual, Guid.NewGuid(), 10_000m, DateTimeOffset.UtcNow, policy);
+    account.ReverseAccrual(Guid.NewGuid(), secondAccrual, DateTimeOffset.UtcNow, policy);
+    Assert.Equal(1, account.PointsBalance);
   }
 }

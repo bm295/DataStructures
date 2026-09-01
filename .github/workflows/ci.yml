@@ -1,0 +1,58 @@
+name: Build, test and coverage
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore HudRo.Fnb.sln
+
+      - name: Restore unit tests
+        run: dotnet restore tests/HudRo.UnitTests/HudRo.UnitTests.csproj
+
+      - name: Build
+        run: |
+          dotnet build HudRo.Fnb.sln --configuration Release --no-restore
+          dotnet build tests/HudRo.UnitTests/HudRo.UnitTests.csproj --configuration Release --no-restore
+
+      - name: Test with coverage
+        run: |
+          dotnet test tests/HudRo.UnitTests/HudRo.UnitTests.csproj \
+            --configuration Release \
+            --no-build \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults/UnitTests \
+            --logger "trx;LogFileName=unit-tests.trx"
+
+      - name: Install report generator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Publish coverage summary
+        shell: bash
+        run: |
+          reportgenerator \
+            -reports:"TestResults/**/coverage.cobertura.xml" \
+            -targetdir:"coverage-report" \
+            -reporttypes:"MarkdownSummaryGithub;TextSummary"
+          cat coverage-report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+          cat coverage-report/Summary.txt

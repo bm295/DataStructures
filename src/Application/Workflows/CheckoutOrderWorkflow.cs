@@ -20,6 +20,11 @@ public sealed class CheckoutOrderWorkflow(
   public async Task<CloseOrderResult> ExecuteAsync(CheckoutOrderCommand command, CancellationToken cancellationToken = default)
   {
     var progress = GetOrCreateProgress(command.CheckoutSessionId, command.OrderId, command.PaymentAttemptId);
+    if (progress.CloseOrderResult is not null)
+    {
+      return progress.CloseOrderResult;
+    }
+
     var order = await orderService.LoadOrderAsync(command.OrderId, cancellationToken);
 
     order.EnsureReadyForCheckout();

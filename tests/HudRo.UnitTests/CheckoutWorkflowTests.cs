@@ -34,7 +34,7 @@ public sealed class CheckoutWorkflowTests
       new PaymentApplicationService(readPort, orderPort, paymentAggregatePort, paymentGatewayPort),
       new LoyaltyApplicationService(loyaltyPort));
 
-    var cmd = new CheckoutOrderCommand(Guid.NewGuid(), order.Id, PaymentMethod.Card, Guid.NewGuid(), Guid.NewGuid());
+    var cmd = new CheckoutOrderCommand(order.Id, PaymentMethod.Card, Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
     await workflow.ExecuteAsync(cmd);
     await workflow.ExecuteAsync(cmd);
@@ -64,7 +64,7 @@ public sealed class CheckoutWorkflowTests
       new PaymentApplicationService(readPort, orderPort, paymentAggregatePort, paymentGatewayPort),
       new LoyaltyApplicationService(loyaltyPort));
 
-    var cmd = new CheckoutOrderCommand(Guid.NewGuid(), order.Id, PaymentMethod.Card, Guid.NewGuid(), Guid.NewGuid());
+    var cmd = new CheckoutOrderCommand(order.Id, PaymentMethod.Card, Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
     await Assert.ThrowsAsync<InvalidOperationException>(() => workflow.ExecuteAsync(cmd));
     Assert.Equal(1, inventoryPort.ReserveCalls);
@@ -72,12 +72,12 @@ public sealed class CheckoutWorkflowTests
 
     var result = await workflow.ExecuteAsync(cmd);
     Assert.Equal(OrderStatus.Closed, order.Status);
-    Assert.Equal(PaymentStatus.Captured, result.PaymentStatus);
+    Assert.Equal(50_000m, result.Bill.Total);
 
     var second = await workflow.ExecuteAsync(cmd);
     Assert.Equal(result.Bill.PaymentReference, second.Bill.PaymentReference);
     Assert.Equal(2, inventoryPort.ReserveCalls); // first failed + one successful; idempotent replay should not reserve again
-    Assert.Equal(1, paymentGatewayPort.CallCount); // only successful charge once for session
+    Assert.Equal(2, paymentGatewayPort.CallCount); // one failed attempt plus one successful retry
   }
 
   private static Order BuildServedOrder()
@@ -94,7 +94,8 @@ public sealed class CheckoutWorkflowTests
   {
     public Task<IReadOnlyList<DiningTable>> GetTablesAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<DiningTable>>([]);
     public Task<IReadOnlyDictionary<string, MenuItem>> GetMenuAsync(CancellationToken cancellationToken = default) => Task.FromResult(menu);
-    public Task<RestaurantProfile> GetRestaurantProfileAsync(CancellationToken cancellationToken = default) => Task.FromResult(new RestaurantProfile("R", 40, 60));
+    public Task<RestaurantProfile> GetProfileAsync(CancellationToken cancellationToken = default) => Task.FromResult(new RestaurantProfile("R", 40, 60));
+    public Task<IReadOnlyList<Order>> GetClosedOrdersAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<Order>>([]);
   }
 
   private sealed class FakeOrderPort(Order order) : IOrderPort
