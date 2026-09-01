@@ -1,10 +1,10 @@
-using DataStructures.Domain;
+using DomainOrder = DataStructures.Domain.Order;
 
 namespace DataStructures.Application.Ports;
 
 public interface IOrderPort
 {
-  Task<Order?> FindByIdAsync(Guid orderId, CancellationToken cancellationToken);
-  Task<Order?> FindOpenOrderByTableAsync(string tableId, CancellationToken cancellationToken);
-  Task SaveAsync(Order order, CancellationToken cancellationToken);
+  Task<DomainOrder?> FindByIdAsync(Guid orderId, CancellationToken cancellationToken);
+  Task<DomainOrder?> FindOpenOrderByTableAsync(string tableId, CancellationToken cancellationToken);
+  Task SaveAsync(DomainOrder order, CancellationToken cancellationToken);
 }

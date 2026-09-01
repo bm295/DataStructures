@@ -4,6 +4,7 @@ using DataStructures.Application.Payment;
 using DataStructures.Application.Reporting;
 using DataStructures.Application.Loyalty;
 using DataStructures.Application.Ports;
+using DataStructures.Application.Workflows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataStructures.Application.DependencyInjection;

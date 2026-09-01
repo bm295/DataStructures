@@ -1,11 +1,12 @@
 using DataStructures.Application.Ports;
 using DataStructures.Domain;
+using DomainOrder = DataStructures.Domain.Order;
 
 namespace DataStructures.Application.Inventory;
 
 public sealed class InventoryApplicationService(IInventoryPort inventoryPort)
 {
-  public async Task ReserveAsync(Order order, CancellationToken cancellationToken = default)
+  public async Task ReserveAsync(DomainOrder order, CancellationToken cancellationToken = default)
   {
     foreach (var (sku, qty) in order.Items)
     {
@@ -15,7 +16,7 @@ public sealed class InventoryApplicationService(IInventoryPort inventoryPort)
     }
   }
 
-  public async Task DeductReservedAsync(Order order, CancellationToken cancellationToken = default)
+  public async Task DeductReservedAsync(DomainOrder order, CancellationToken cancellationToken = default)
   {
     foreach (var (sku, qty) in order.Items)
     {
@@ -25,7 +26,7 @@ public sealed class InventoryApplicationService(IInventoryPort inventoryPort)
     }
   }
 
-  public async Task ReleaseAsync(Order order, CancellationToken cancellationToken = default)
+  public async Task ReleaseAsync(DomainOrder order, CancellationToken cancellationToken = default)
   {
     foreach (var (sku, qty) in order.Items)
     {

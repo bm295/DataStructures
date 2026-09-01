@@ -6,28 +6,28 @@ public sealed class FnbConsolePresenter
 {
   public void Show(ServiceSummaryResult summary)
   {
-    Console.WriteLine("=== FnB Management Demo ===");
-    Console.WriteLine($"Restaurant: {summary.Profile.Name}");
-    Console.WriteLine($"Seat requirement: {summary.Profile.MinSeats}-{summary.Profile.MaxSeats}");
-    Console.WriteLine($"Configured seats: {summary.ConfiguredSeats}");
-    Console.WriteLine();
+    System.Console.WriteLine("=== FnB Management Demo ===");
+    System.Console.WriteLine($"Restaurant: {summary.Profile.Name}");
+    System.Console.WriteLine($"Seat requirement: {summary.Profile.MinSeats}-{summary.Profile.MaxSeats}");
+    System.Console.WriteLine($"Configured seats: {summary.ConfiguredSeats}");
+    System.Console.WriteLine();
 
     foreach (var bill in summary.Bills)
     {
-      Console.WriteLine($"Order {bill.OrderId} - Table {bill.TableId} ({bill.Guests} guests)");
+      System.Console.WriteLine($"Order {bill.OrderId} - Table {bill.TableId} ({bill.Guests} guests)");
       foreach (var line in bill.Lines)
       {
-        Console.WriteLine($" - {line.ItemName} x{line.Quantity} @ {line.UnitPrice:N0} = {line.LineTotal:N0}");
+        System.Console.WriteLine($" - {line.ItemName} x{line.Quantity} @ {line.UnitPrice:N0} = {line.LineTotal:N0}");
       }
 
-      Console.WriteLine($" Payment: {bill.PaymentMethod} / Ref: {bill.PaymentReference}");
-      Console.WriteLine($" Total: {bill.Total:N0}");
-      Console.WriteLine();
+      System.Console.WriteLine($" Payment: {bill.PaymentMethod} / Ref: {bill.PaymentReference}");
+      System.Console.WriteLine($" Total: {bill.Total:N0}");
+      System.Console.WriteLine();
     }
 
-    Console.WriteLine("Daily summary");
-    Console.WriteLine($"Orders closed: {summary.OrdersClosed}");
-    Console.WriteLine($"Guests served: {summary.ServedGuests}");
-    Console.WriteLine($"Revenue: {summary.Revenue:N0}");
+    System.Console.WriteLine("Daily summary");
+    System.Console.WriteLine($"Orders closed: {summary.OrdersClosed}");
+    System.Console.WriteLine($"Guests served: {summary.ServedGuests}");
+    System.Console.WriteLine($"Revenue: {summary.Revenue:N0}");
   }
 }

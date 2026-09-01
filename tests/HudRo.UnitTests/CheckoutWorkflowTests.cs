@@ -94,7 +94,7 @@ public sealed class CheckoutWorkflowTests
   {
     public Task<IReadOnlyList<DiningTable>> GetTablesAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<DiningTable>>([]);
     public Task<IReadOnlyDictionary<string, MenuItem>> GetMenuAsync(CancellationToken cancellationToken = default) => Task.FromResult(menu);
-    public Task<RestaurantProfile> GetRestaurantProfileAsync(CancellationToken cancellationToken = default) => Task.FromResult(new RestaurantProfile("R", 1, 10));
+    public Task<RestaurantProfile> GetRestaurantProfileAsync(CancellationToken cancellationToken = default) => Task.FromResult(new RestaurantProfile("R", 40, 60));
   }
 
   private sealed class FakeOrderPort(Order order) : IOrderPort

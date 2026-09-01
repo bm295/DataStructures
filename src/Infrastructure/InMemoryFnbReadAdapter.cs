@@ -1,5 +1,6 @@
 using DataStructures.Application.Ports;
 using DataStructures.Domain;
+using DomainOrder = DataStructures.Domain.Order;
 
 namespace DataStructures.Infrastructure;
 
@@ -14,6 +15,6 @@ public sealed class InMemoryFnbReadAdapter(InMemoryFnbStore store) : IFnbReadPor
   public Task<IReadOnlyDictionary<string, MenuItem>> GetMenuAsync(CancellationToken cancellationToken)
     => Task.FromResult<IReadOnlyDictionary<string, MenuItem>>(store.Menu);
 
-  public Task<IReadOnlyList<Order>> GetClosedOrdersAsync(CancellationToken cancellationToken)
-    => Task.FromResult<IReadOnlyList<Order>>(store.Orders.Values.Where(o => o.Status == OrderStatus.Closed).ToArray());
+  public Task<IReadOnlyList<DomainOrder>> GetClosedOrdersAsync(CancellationToken cancellationToken)
+    => Task.FromResult<IReadOnlyList<DomainOrder>>(store.Orders.Values.Where(o => o.Status == OrderStatus.Closed).ToArray());
 }

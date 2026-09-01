@@ -1,6 +1,7 @@
 using DataStructures.Application.Models;
 using DataStructures.Application.Ports;
 using DataStructures.Domain;
+using DomainOrder = DataStructures.Domain.Order;
 
 namespace DataStructures.Application.Order;
 
@@ -27,7 +28,7 @@ public sealed class OrderApplicationService(IFnbReadPort readPort, IOrderPort or
       throw new InvalidOperationException($"Table {command.TableId} already has an active order.");
     }
 
-    var order = new Order(Guid.NewGuid(), command.TableId, command.Guests, DateTimeOffset.UtcNow);
+    var order = new DomainOrder(Guid.NewGuid(), command.TableId, command.Guests, DateTimeOffset.UtcNow);
     await orderPort.SaveAsync(order, cancellationToken);
     return order.Id;
   }
@@ -105,7 +106,7 @@ public sealed class OrderApplicationService(IFnbReadPort readPort, IOrderPort or
     return new CloseOrderResult(bill);
   }
 
-  public async Task<Order> LoadOrderAsync(Guid orderId, CancellationToken cancellationToken = default)
+  public async Task<DomainOrder> LoadOrderAsync(Guid orderId, CancellationToken cancellationToken = default)
   {
     return await orderPort.FindByIdAsync(orderId, cancellationToken)
         ?? throw new KeyNotFoundException($"Order not found: {orderId}");

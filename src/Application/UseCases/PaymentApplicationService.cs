@@ -2,6 +2,7 @@ using DataStructures.Application.Models;
 using DataStructures.Application.Ports;
 using DataStructures.Domain;
 using DataStructures.Domain.Payments;
+using DomainOrder = DataStructures.Domain.Order;
 
 namespace DataStructures.Application.Payment;
 
@@ -11,7 +12,7 @@ public sealed class PaymentApplicationService(
   IPaymentAggregatePort paymentAggregatePort,
   IPaymentGatewayPort paymentGatewayPort) : IPaymentOperations
 {
-  public async Task<PaymentResult> ChargeOrderAsync(Order order, PaymentMethod method, Guid paymentAttemptId, CancellationToken cancellationToken = default)
+  public async Task<PaymentResult> ChargeOrderAsync(DomainOrder order, PaymentMethod method, Guid paymentAttemptId, CancellationToken cancellationToken = default)
   {
     var menu = await readPort.GetMenuAsync(cancellationToken);
     var total = CalculateTotal(order, menu);
@@ -51,7 +52,7 @@ public sealed class PaymentApplicationService(
     return new PaymentResult(order.Id, payment.Amount, payment.Method, payment.Reference!, payment.Status, payment.RetryCount, payment.FailureReason);
   }
 
-  private static decimal CalculateTotal(Order order, IReadOnlyDictionary<string, MenuItem> menu)
+  private static decimal CalculateTotal(DomainOrder order, IReadOnlyDictionary<string, MenuItem> menu)
   {
     return order.Items.Sum(item => menu[item.Key].Price * item.Value);
   }

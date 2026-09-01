@@ -78,8 +78,8 @@ public sealed class LoyaltyTierPolicy
   {
     return pointsBalance switch
     {
-      >= var p when p >= _goldThreshold => LoyaltyTier.Gold,
-      >= var p when p >= _silverThreshold => LoyaltyTier.Silver,
+      var p when p >= _goldThreshold => LoyaltyTier.Gold,
+      var p when p >= _silverThreshold => LoyaltyTier.Silver,
       _ => LoyaltyTier.Bronze,
     };
   }

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HudRo FnB</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>HudRo FnB</h1>
+      <p id="seatRange">Dang tai cau hinh...</p>
+    </div>
+    <button id="refreshButton" class="iconButton" title="Lam moi">↻</button>
+  </header>
+
+  <main class="layout">
+    <section class="workspace">
+      <div class="sectionHeader">
+        <h2>So do ban</h2>
+        <form id="createOrderForm" class="inlineForm">
+          <select id="tableSelect" aria-label="Ban"></select>
+          <input id="guestInput" type="number" min="1" value="2" aria-label="So khach">
+          <button type="submit">Mo order</button>
+        </form>
+      </div>
+      <div id="tableGrid" class="tableGrid"></div>
+
+      <div class="sectionHeader">
+        <h2>Order dang phuc vu</h2>
+      </div>
+      <div id="orders" class="orders"></div>
+    </section>
+
+    <aside class="side">
+      <section>
+        <h2>Menu</h2>
+        <div id="menuList" class="list"></div>
+      </section>
+
+      <section>
+        <h2>Ton kho</h2>
+        <div id="inventoryList" class="list"></div>
+      </section>
+
+      <section>
+        <h2>Cuoi ca</h2>
+        <dl class="summary">
+          <div><dt>Khach da phuc vu</dt><dd id="servedGuests">0</dd></div>
+          <div><dt>Order da dong</dt><dd id="ordersClosed">0</dd></div>
+          <div><dt>Doanh thu</dt><dd id="revenue">0</dd></div>
+        </dl>
+      </section>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

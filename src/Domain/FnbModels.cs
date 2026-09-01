@@ -1,6 +1,44 @@
 namespace DataStructures.Domain;
 
-public sealed record RestaurantProfile(string Name, int MinSeats, int MaxSeats);
+public sealed record RestaurantProfile
+{
+  public const int RequiredMinimumSeats = 40;
+  public const int RequiredMaximumSeats = 60;
+
+  public string Name { get; }
+  public int MinSeats { get; }
+  public int MaxSeats { get; }
+
+  public RestaurantProfile(string name, int minSeats, int maxSeats)
+  {
+    if (string.IsNullOrWhiteSpace(name))
+    {
+      throw new ArgumentException("Restaurant name is required.", nameof(name));
+    }
+
+    if (minSeats < RequiredMinimumSeats)
+    {
+      throw new InvalidOperationException(
+        $"Minimum seat requirement ({minSeats}) is below the HudRo business range minimum ({RequiredMinimumSeats}).");
+    }
+
+    if (maxSeats > RequiredMaximumSeats)
+    {
+      throw new InvalidOperationException(
+        $"Maximum seat requirement ({maxSeats}) is above the HudRo business range maximum ({RequiredMaximumSeats}).");
+    }
+
+    if (minSeats > maxSeats)
+    {
+      throw new InvalidOperationException(
+        $"Minimum seat requirement ({minSeats}) cannot exceed maximum seat requirement ({maxSeats}).");
+    }
+
+    Name = name;
+    MinSeats = minSeats;
+    MaxSeats = maxSeats;
+  }
+}
 
 public sealed record DiningTable(string Id, int Seats);
 
@@ -343,6 +381,15 @@ public sealed class Order
     {
       throw new InvalidOperationException(
         $"Order {Id} items can be edited only in Draft status. Current status is {Status}.");
+    }
+  }
+
+  private void EnsureStatus(OrderStatus expected)
+  {
+    if (Status != expected)
+    {
+      throw new InvalidOperationException(
+        $"Order {Id} must be {expected}. Current status is {Status}.");
     }
   }
 

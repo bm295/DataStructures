@@ -1,5 +1,65 @@
 # DataStructures
 
+## Local build and run
+
+### Prerequisites
+
+- .NET SDK 10.0 or newer.
+- A terminal opened at the repository root.
+
+Check the installed SDK:
+
+```bash
+dotnet --version
+```
+
+### Restore dependencies
+
+```bash
+dotnet restore
+```
+
+### Build the web app
+
+```bash
+dotnet build HudRo.Fnb.csproj
+```
+
+### Run locally
+
+```bash
+dotnet run --project HudRo.Fnb.csproj
+```
+
+Open the app in a browser:
+
+```text
+http://localhost:5058
+```
+
+### Run tests
+
+```bash
+dotnet test --no-restore
+```
+
+### Basic local workflow
+
+1. Open `http://localhost:5058`.
+2. Create an order for an available table.
+3. Add menu items.
+4. Send the order to kitchen.
+5. Move it through preparing and served.
+6. Checkout the order.
+7. Confirm the end-of-day summary updates.
+
+### Notes
+
+- The app uses an in-memory store, so data resets when the process stops.
+- Current sample seating is 52 seats, within the HudRo requirement of 40-60 seats.
+- The UI is served from `wwwroot/`; the API endpoints are defined in `Program.cs`.
+- The default local URL is configured in `appsettings.json`.
+
 Ứng dụng mẫu quản lý FnB cho **HudRo** theo kiến trúc **Hexagonal Architecture (Ports & Adapters)**.
 
 ## Mục tiêu

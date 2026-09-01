@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
  <PropertyGroup>
   <OutputType>Exe</OutputType>
@@ -7,6 +7,12 @@
   <Nullable>enable</Nullable>
   <LangVersion>preview</LangVersion>
  </PropertyGroup>
+
+ <ItemGroup>
+  <Compile Remove="bin\**;obj\**;tests\**" />
+  <Content Remove="bin\**;obj\**;tests\**" />
+  <None Remove="bin\**;obj\**;tests\**" />
+ </ItemGroup>
 
  <ItemGroup>
   <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />

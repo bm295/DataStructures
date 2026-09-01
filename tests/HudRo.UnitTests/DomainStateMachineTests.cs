@@ -8,6 +8,26 @@ namespace HudRo.UnitTests;
 public sealed class DomainStateMachineTests
 {
   [Fact]
+  public void RestaurantProfile_ShouldAcceptHudRoSeatRequirementBounds()
+  {
+    var profile = new RestaurantProfile("HudRo", 40, 60);
+
+    Assert.Equal("HudRo", profile.Name);
+    Assert.Equal(40, profile.MinSeats);
+    Assert.Equal(60, profile.MaxSeats);
+  }
+
+  [Theory]
+  [InlineData("", 40, 60)]
+  [InlineData("HudRo", 39, 60)]
+  [InlineData("HudRo", 40, 61)]
+  [InlineData("HudRo", 60, 40)]
+  public void RestaurantProfile_ShouldRejectInvalidSeatRequirementBounds(string name, int minSeats, int maxSeats)
+  {
+    Assert.ThrowsAny<Exception>(() => new RestaurantProfile(name, minSeats, maxSeats));
+  }
+
+  [Fact]
   public void Payment_ShouldRetryUntilMax_ThenReject()
   {
     var payment = Payment.CreateNew(Guid.NewGuid(), 100_000m, PaymentMethod.Card);

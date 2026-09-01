@@ -1,9 +1,11 @@
 using System.Collections.Concurrent;
 using DataStructures.Application.Models;
 using DataStructures.Application.Inventory;
+using DataStructures.Application.Order;
 using DataStructures.Application.Ports;
 using DataStructures.Domain;
 using DataStructures.Domain.Inventory;
+using DomainOrder = DataStructures.Domain.Order;
 
 namespace DataStructures.Application.Workflows;
 
@@ -44,7 +46,7 @@ public sealed class CheckoutOrderWorkflow(
     return ProgressBySession.GetOrAdd(checkoutSessionId, _ => new CheckoutProgress(orderId, paymentAttemptId));
   }
 
-  private async Task ReserveInventoryAsync(Order order, CheckoutProgress progress, CancellationToken cancellationToken)
+  private async Task ReserveInventoryAsync(DomainOrder order, CheckoutProgress progress, CancellationToken cancellationToken)
   {
     EnsureCommandConsistency(progress, order.Id, progress.PaymentAttemptId);
 
@@ -57,7 +59,7 @@ public sealed class CheckoutOrderWorkflow(
     progress.InventoryLifecycle.MarkReserved();
   }
 
-  private async Task DeductReservedInventoryAsync(Order order, CheckoutProgress progress, CancellationToken cancellationToken)
+  private async Task DeductReservedInventoryAsync(DomainOrder order, CheckoutProgress progress, CancellationToken cancellationToken)
   {
     if (!progress.InventoryLifecycle.IsDeductionRequired())
     {
@@ -69,7 +71,7 @@ public sealed class CheckoutOrderWorkflow(
   }
 
   private async Task AuthorizeAndCapturePaymentAsync(
-    Order order,
+    DomainOrder order,
     CheckoutOrderCommand command,
     CheckoutProgress progress,
     CancellationToken cancellationToken)
@@ -84,7 +86,7 @@ public sealed class CheckoutOrderWorkflow(
     progress.PaymentResult = await paymentService.ChargeOrderAsync(order, command.Method, command.PaymentAttemptId, cancellationToken);
   }
 
-  private async Task CloseOrderAsync(Order order, CheckoutProgress progress, CancellationToken cancellationToken)
+  private async Task CloseOrderAsync(DomainOrder order, CheckoutProgress progress, CancellationToken cancellationToken)
   {
     if (progress.CloseOrderResult is not null)
     {
@@ -99,7 +101,7 @@ public sealed class CheckoutOrderWorkflow(
     progress.CloseOrderResult = await orderService.CloseOrderStateOnlyAsync(order.Id, progress.PaymentResult, cancellationToken);
   }
 
-  private async Task CompensateAsync(Order order, CheckoutProgress progress, CancellationToken cancellationToken)
+  private async Task CompensateAsync(DomainOrder order, CheckoutProgress progress, CancellationToken cancellationToken)
   {
     // Compensation policy:
     // - Failed before payment capture: restore deducted inventory.

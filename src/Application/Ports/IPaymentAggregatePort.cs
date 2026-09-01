@@ -1,9 +1,9 @@
-using DataStructures.Domain.Payments;
+using DomainPayment = DataStructures.Domain.Payments.Payment;
 
 namespace DataStructures.Application.Ports;
 
 public interface IPaymentAggregatePort
 {
-  Task<Payment?> FindByOrderIdAsync(Guid orderId, CancellationToken cancellationToken);
-  Task SaveAsync(Payment payment, CancellationToken cancellationToken);
+  Task<DomainPayment?> FindByOrderIdAsync(Guid orderId, CancellationToken cancellationToken);
+  Task SaveAsync(DomainPayment payment, CancellationToken cancellationToken);
 }
